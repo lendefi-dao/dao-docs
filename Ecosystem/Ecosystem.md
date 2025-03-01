@@ -2,72 +2,88 @@
 [Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/05bc99b130950ac71cca48b96856e5ce17a94027/contracts/ecosystem/Ecosystem.sol)
 
 
-## Overview
-The Ecosystem contract serves as a token distribution and management hub for the Lendefi DAO, handling airdrops, rewards, token burning, and partnership vesting. It's designed with a strong emphasis on security, role-based access control, and upgradeability.
+# Comprehensive Review of the Lendefi DAO Ecosystem Contract
 
-## Architecture and Design
+## Overview
+
+The Lendefi DAO Ecosystem contract is a sophisticated governance contract responsible for managing token distribution, rewards, burning, and partner vesting within the Lendefi ecosystem. This contract is implemented using the UUPS upgradeable pattern, providing flexibility for future improvements while maintaining a strong security posture through a comprehensive role-based access control system.
+
+## Architecture & Design
 
 ### Contract Structure
-- **Well-organized inheritance**: Follows a clear inheritance pattern using OpenZeppelin's upgradeable contracts
-- **Role separation**: Uses granular role-based access control with specialized roles for each function
-- **Token distribution mechanisms**: Implements four distinct distribution strategies (airdrops, rewards, burns, partnership vesting)
-- **Supply tracking**: Maintains careful accounting of token allocations and distributions
+- **Inheritance**: The contract inherits from multiple OpenZeppelin upgradeable contracts (Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable)
+- **Implementation**: The contract implements the IECOSYSTEM interface
+- **Token Integration**: It interacts with a governance token implementing the ILENDEFI interface
 
-### Token Economics
-- **Defined allocations**: Allocates token supply in predetermined percentages:
-  - 26% for rewards
-  - 10% for airdrops
-  - 8% for partnerships
-- **Distribution limits**: Sets rational bounds with maxReward (0.1% of reward supply) and maxBurn (2% of reward supply)
-- **Partnership vesting**: Creates dedicated vesting contracts using OpenZeppelin's VestingWallet
+### Storage Layout
+The contract maintains well-organized state variables:
+- Token instance and timelock address
+- Supply tracking (reward, airdrop, partnership)
+- Issuance tracking (rewards, airdrops, partnerships, burns)
+- Maximum limits (max reward, max burn)
+- Version control for upgrades
+- Partner vesting contract mapping
+
+### Role-Based Access Control
+The contract implements a robust role system:
+- BURNER_ROLE: Controls token burning
+- PAUSER_ROLE: Controls pause/unpause functionality
+- UPGRADER_ROLE: Controls contract upgradability
+- REWARDER_ROLE: Controls reward distribution
+- MANAGER_ROLE: Controls partner management and configuration updates
+- DEFAULT_ADMIN_ROLE: Grants/revokes roles (assigned to guardian)
+
+## Functionality Analysis
+
+### Token Distribution
+- **Airdrop Function**: Distributes equal amounts to multiple recipients
+  - Appropriate input validation (min amount, recipient count)
+  - Gas-aware implementation (4000 recipient limit)
+  - Proper accounting (issuedAirDrop tracking)
+  - Zero address handling in recipients array
+
+- **Reward Function**: Distributes tokens to individual addresses
+  - Checks maximum reward limits
+  - Ensures sufficient reward supply
+  - Updates accounting
+
+### Token Management
+- **Burn Function**: Permanently removes tokens from circulation
+  - Enforces maximum burn limits and supply constraints
+  - Updates both rewardSupply and burnedAmount for accurate accounting
+  - Calls the token's burn function directly
+
+### Partner Management
+- **Add Partner**: Creates vesting contracts for partners
+  - Prevents duplicate partners
+  - Enforces minimum/maximum allocation limits (100 ether to 50% of supply)
+  - Creates dedicated vesting contract with cliff and duration parameters
+
+- **Cancel Partnership**: Terminates vesting contracts
+  - Restricted to timelock (governance)
+  - Improved accounting through return value tracking
+  - Tokens flow from vesting→ecosystem→timelock
+
+### Configuration Management
+- **Update Max Reward**: Configures reward limits
+  - Prevents excessive values (maximum 5% of remaining supply)
+  - Maintains proper event logs of changes
+
+- **Update Max Burn**: Configures burn limits
+  - Prevents excessive values (maximum 10% of remaining supply)
+  - Maintains proper event logs of changes
 
 ## Security Analysis
 
 ### Strengths
-1. **Comprehensive role management**:
-   - MANAGER_ROLE for administrative functions
-   - PAUSER_ROLE for emergency controls
-   - BURNER_ROLE for token burning
-   - REWARDER_ROLE for issuing rewards
-   - UPGRADER_ROLE for contract upgrades
-
-2. **Multiple safety mechanisms**:
-   - ReentrancyGuard on all fund-moving functions
-   - Pausable functionality for emergency situations
-   - Strict supply limits and accounting
-   - SafeERC20 usage for token transfers
-   - SafeCast for type conversions
-   - Rejection of direct ETH transfers
-
-3. **Input validation**:
-   - Zero address checks
-   - Amount validation with minimum and maximum thresholds
-   - Supply limit enforcement
-   - Gas-aware array processing (4000 recipient limit for airdrops)
-
-### Potential Concerns
-1. **Centralization risks**: Heavy reliance on role-based permissions could centralize control depending on role assignment
-2. **Fixed allocation percentages**: Token allocations are hardcoded at initialization without adjustment mechanisms
-3. **Immutable partner vesting**: Once created, partner vesting contracts cannot be modified
-4. **No recovery mechanism**: No functionality to recover accidentally sent tokens
-
-## Gas Efficiency
-- Efficient loop construction in airdrop function
-- Smart gas limit handling (limits airdrop arrays to 4000 entries)
-- Use of custom errors instead of string messages
-- Calldata parameters for arrays
-
-## Upgradeability
-- Properly implemented UUPS pattern
-- Version tracking with increment on upgrade
-- Storage gap for future extensions
-- Clear upgrade authorization controls
-
-## Code Quality and Documentation
-- Excellent NatSpec documentation
-- Clear error messages and custom errors
-- Thorough event emissions for important state changes
-- Detailed parameter validation explanations
+1. **Comprehensive Access Control**: Well-defined roles with proper separation of concerns
+2. **Reentrancy Protection**: All state-changing functions use ReentrancyGuard
+3. **Input Validation**: Thorough validation with meaningful error messages
+4. **Event Emissions**: Events for all critical state changes
+5. **Safe Token Handling**: Uses SafeERC20 for all token operations
+6. **Upgradability**: UUPS pattern with proper authorization checks and version tracking
+7. **Storage Gap**: Includes `__gap` for future storage additions
+8. **Partnership Supply Protections**: Both individual and total limits on partnership allocations
 
 
 
@@ -76,7 +92,7 @@ The Ecosystem contract serves as a token distribution and management hub for the
 
 Ecosystem contract handles airdrops, rewards, burning, and partnerships
 
-*Implements a secure and upgradeable DAO ecosystem*
+*Implements a secure and upgradeable DAO ecosystem with improved accounting*
 
 **Notes:**
 - security-contact: security@nebula-labs.xyz
@@ -168,6 +184,15 @@ uint256 public issuedReward;
 ```
 
 
+### burnedAmount
+*burned reward amount*
+
+
+```solidity
+uint256 public burnedAmount;
+```
+
+
 ### maxBurn
 *maximum one time burn amount*
 
@@ -222,24 +247,37 @@ uint32 public version;
 ```
 
 
+### timelock
+*timelock address for partner vesting cancellations*
+
+
+```solidity
+address public timelock;
+```
+
+
 ### vestingContracts
 *Addresses of vesting contracts issued to partners*
 
 
 ```solidity
-mapping(address src => address vesting) public vestingContracts;
+mapping(address partner => address vesting) public vestingContracts;
 ```
 
 
 ### __gap
 
 ```solidity
-uint256[50] private __gap;
+uint256[49] private __gap;
 ```
 
 
 ## Functions
 ### constructor
+
+*Custom error types*
+
+*Events*
 
 **Note:**
 oz-upgrades-unsafe-allow: constructor
@@ -251,7 +289,7 @@ constructor();
 
 ### receive
 
-*Prevents receiving Ether*
+*Prevents receiving Ether. This contract doesn't handle ETH.*
 
 
 ```solidity
@@ -273,17 +311,18 @@ Sets up the initial state of the contract, including roles and token supplies.
 
 - events-emits: {Initialized} event.
 
-- throws: CustomError("ZERO_ADDRESS_DETECTED") if any of the input addresses are zero.
+- throws: ZeroAddressDetected if any of the input addresses are zero.
 
 
 ```solidity
-function initialize(address token, address guardian, address pauser) external initializer;
+function initialize(address token, address timelockAddr, address guardian, address pauser) external initializer;
 ```
 **Parameters**
 
 |Name|Type|Description|
 |----|----|-----------|
 |`token`|`address`|The address of the governance token.|
+|`timelockAddr`|`address`|The address of the timelock controller for partner vesting cancellation.|
 |`guardian`|`address`|The address of the guardian (admin).|
 |`pauser`|`address`|The address of the pauser.|
 
@@ -322,9 +361,9 @@ function unpause() external onlyRole(PAUSER_ROLE);
 
 ### airdrop
 
-Distributes a specified amount of tokens to each address in the winners array.
+Distributes a specified amount of tokens to each address in the recipients array.
 
-*Performs an airdrop to a list of winners.*
+*Performs an airdrop to a list of recipients.*
 
 **Notes:**
 - requires-role: MANAGER_ROLE
@@ -335,19 +374,19 @@ Distributes a specified amount of tokens to each address in the winners array.
 
 - requires: Total airdropped amount must not exceed the airdrop supply
 
-- requires: Number of winners must not exceed 4000 to avoid gas limit issues
+- requires: Number of recipients must not exceed 4000 to avoid gas limit issues
 
 - events-emits: {AirDrop} event
 
-- throws: CustomError("INVALID_AMOUNT") if the amount is less than 1 ether
+- throws: InvalidAmount if the amount is less than 1 ether
 
-- throws: CustomError("AIRDROP_SUPPLY_LIMIT") if the total airdropped amount exceeds the airdrop supply
+- throws: AirdropSupplyLimit if the total airdropped amount exceeds the airdrop supply
 
-- throws: CustomError("GAS_LIMIT") if the number of winners exceeds 4000
+- throws: GasLimit if the number of recipients exceeds 4000
 
 
 ```solidity
-function airdrop(address[] calldata winners, uint256 amount)
+function airdrop(address[] calldata recipients, uint256 amount)
     external
     nonReentrant
     whenNotPaused
@@ -357,7 +396,7 @@ function airdrop(address[] calldata winners, uint256 amount)
 
 |Name|Type|Description|
 |----|----|-----------|
-|`winners`|`address[]`|An array of addresses to receive the airdrop.|
+|`recipients`|`address[]`|An array of addresses to receive the airdrop.|
 |`amount`|`uint256`|The amount of tokens to be airdropped to each address.|
 
 
@@ -380,11 +419,11 @@ Distributes a specified amount of tokens to a beneficiary address.
 
 - events-emits: {Reward} event
 
-- throws: CustomError("INVALID_AMOUNT") if the amount is 0
+- throws: InvalidAmount if the amount is 0
 
-- throws: CustomError("REWARD_LIMIT") if the amount exceeds the maximum reward limit
+- throws: RewardLimit if the amount exceeds the maximum reward limit
 
-- throws: CustomError("REWARD_SUPPLY_LIMIT") if the total rewarded amount exceeds the reward supply
+- throws: RewardSupplyLimit if the total rewarded amount exceeds the reward supply
 
 
 ```solidity
@@ -417,11 +456,11 @@ Burns a specified amount of tokens from the reward supply.
 
 - events-emits: {Burn} event
 
-- throws: CustomError("INVALID_AMOUNT") if the amount is 0
+- throws: InvalidAmount if the amount is 0
 
-- throws: CustomError("BURN_SUPPLY_LIMIT") if the total burned amount exceeds the reward supply
+- throws: MaxBurnLimit if the amount exceeds the maximum burn limit
 
-- throws: CustomError("MAX_BURN_LIMIT") if the amount exceeds the maximum burn limit
+- throws: BurnSupplyLimit if the amount exceeds available supply
 
 
 ```solidity
@@ -436,7 +475,7 @@ function burn(uint256 amount) external nonReentrant whenNotPaused onlyRole(BURNE
 
 ### addPartner
 
-Adds a new partner by creating a vesting contract and transferring the specified amount of tokens.
+Adds a new partner by creating a cancellable vesting contract and transferring the specified amount of tokens.
 
 *Creates and funds a new vesting contract for a new partner.*
 
@@ -445,7 +484,7 @@ Adds a new partner by creating a vesting contract and transferring the specified
 
 - requires: Contract must not be paused
 
-- requires: Partner address must not be zero
+- requires: Partner address must not be zero and must be a valid contract or EOA
 
 - requires: Amount must be between 100 ether and half of the partnership supply
 
@@ -453,13 +492,13 @@ Adds a new partner by creating a vesting contract and transferring the specified
 
 - events-emits: {AddPartner} event
 
-- throws: CustomError("INVALID_ADDRESS") if the partner address is zero
+- throws: InvalidAddress if the partner address is zero
 
-- throws: CustomError("PARTNER_EXISTS") if the partner already has a vesting contract
+- throws: PartnerExists if the partner already has a vesting contract
 
-- throws: CustomError("INVALID_AMOUNT") if the amount is not within the valid range
+- throws: InvalidAmount if the amount is not within the valid range
 
-- throws: CustomError("AMOUNT_EXCEEDS_SUPPLY") if the total issued partnership tokens exceed the partnership supply
+- throws: AmountExceedsSupply if the total issued partnership tokens exceed the partnership supply
 
 
 ```solidity
@@ -479,6 +518,32 @@ function addPartner(address partner, uint256 amount, uint256 cliff, uint256 dura
 |`duration`|`uint256`|The duration in seconds of the vesting period.|
 
 
+### cancelPartnership
+
+This can only be called by the timelock (governance)
+
+This can only be called by the timelock (governance)
+
+*Cancels a partner vesting contract*
+
+*Cancels a partner vesting contract*
+
+**Notes:**
+- requires: The caller must be the timelock
+
+- emits: CancelPartnership event on successful cancellation
+
+
+```solidity
+function cancelPartnership(address partner) external;
+```
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`partner`|`address`|The address of the partner whose vesting should be cancelled|
+
+
 ### updateMaxReward
 
 Allows updating the maximum reward that can be issued in a single transaction.
@@ -496,9 +561,9 @@ Allows updating the maximum reward that can be issued in a single transaction.
 
 - events-emits: {MaxRewardUpdated} event
 
-- throws: CustomError("INVALID_AMOUNT") if the amount is 0
+- throws: InvalidAmount if the amount is 0
 
-- throws: CustomError("EXCESSIVE_MAX_REWARD") if the amount exceeds 5% of remaining reward supply
+- throws: ExcessiveMaxValue if the amount exceeds 5% of remaining reward supply
 
 
 ```solidity
@@ -511,6 +576,83 @@ function updateMaxReward(uint256 newMaxReward) external whenNotPaused onlyRole(M
 |`newMaxReward`|`uint256`|The new maximum reward amount.|
 
 
+### updateMaxBurn
+
+Allows updating the maximum amount that can be burned in a single transaction.
+
+*Updates the maximum one-time burn amount.*
+
+**Notes:**
+- requires-role: MANAGER_ROLE
+
+- requires: Contract must not be paused
+
+- requires: New max burn must be greater than 0
+
+- requires: New max burn must not exceed 10% of remaining reward supply
+
+- events-emits: {MaxBurnUpdated} event
+
+- throws: InvalidAmount if the amount is 0
+
+- throws: ExcessiveMaxValue if the amount exceeds 10% of remaining reward supply
+
+
+```solidity
+function updateMaxBurn(uint256 newMaxBurn) external whenNotPaused onlyRole(MANAGER_ROLE);
+```
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`newMaxBurn`|`uint256`|The new maximum burn amount.|
+
+
+### availableRewardSupply
+
+*Returns the effective available reward supply considering burns.*
+
+
+```solidity
+function availableRewardSupply() external view returns (uint256);
+```
+**Returns**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`<none>`|`uint256`|The current available reward supply.|
+
+
+### availableAirdropSupply
+
+*Returns the effective available airdrop supply.*
+
+
+```solidity
+function availableAirdropSupply() external view returns (uint256);
+```
+**Returns**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`<none>`|`uint256`|The current available airdrop supply.|
+
+
+### availablePartnershipSupply
+
+*Returns the effective available partnership supply.*
+
+
+```solidity
+function availablePartnershipSupply() external view returns (uint256);
+```
+**Returns**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`<none>`|`uint256`|The current available partnership supply.|
+
+
 ### _authorizeUpgrade
 
 This function is called during the upgrade process to authorize the new implementation.
@@ -520,7 +662,7 @@ This function is called during the upgrade process to authorize the new implemen
 **Notes:**
 - requires-role: UPGRADER_ROLE
 
-- events-emits: {Upgrade} event
+- events-emits: {Upgrade} event with upgrader, implementation and version
 
 
 ```solidity
