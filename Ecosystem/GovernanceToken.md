@@ -195,6 +195,13 @@ oz-upgrades-unsafe-allow: constructor
 constructor();
 ```
 
+### receive
+
+
+```solidity
+receive() external payable;
+```
+
 ### initializeUUPS
 
 Sets up the initial state of the contract, including roles and token supplies.
@@ -206,7 +213,7 @@ Sets up the initial state of the contract, including roles and token supplies.
 
 - events-emits: [Initialized](/contracts/ecosystem/GovernanceToken.sol/contract.GovernanceToken.md#initialized) event.
 
-- throws: CustomError("ZERO_ADDRESS") if the guardian address is zero.
+- throws: ZeroAddress if the guardian address is zero.
 
 
 ```solidity
@@ -232,9 +239,9 @@ Sets up the initial token distribution between the ecosystem and treasury contra
 
 - events-emits: [TGE](/contracts/ecosystem/GovernanceToken.sol/contract.GovernanceToken.md#tge) event.
 
-- throws: CustomError("ZERO_ADDRESS") if any of the addresses are zero.
+- throws: ZeroAddress if any address is zero.
 
-- throws: CustomError("TGE_ALREADY_INITIALIZED") if TGE is already initialized.
+- throws: TGEAlreadyInitialized if TGE was already initialized.
 
 
 ```solidity
@@ -282,33 +289,67 @@ function unpause() external onlyRole(PAUSER_ROLE);
 
 ### bridgeMint
 
-Mints new tokens to a specified address, called by an account with the BRIDGE_ROLE.
+Can only be called by the official Bridge contract
 
-*Facilitates Bridge BnM functionality called by the bridge app.*
+*Mints tokens for cross-chain bridge transfers*
 
 **Notes:**
 - requires-role: BRIDGE_ROLE
 
-- requires: Amount must not exceed maxBridge.
+- requires: Total supply must not exceed initialSupply
 
-- requires: Total supply must not exceed initialSupply.
+- requires: to address must not be zero
+
+- requires: amount must not be zero
+
+- requires: amount must not exceed maxBridge limit
 
 - events-emits: [BridgeMint](/contracts/ecosystem/GovernanceToken.sol/contract.GovernanceToken.md#bridgemint) event
 
-- throws: CustomError("BRIDGE_LIMIT") if the amount exceeds maxBridge.
+- throws: ZeroAddress if recipient address is zero
 
-- throws: CustomError("BRIDGE_PROBLEM") if the total supply exceeds initialSupply.
+- throws: ZeroAmount if amount is zero
+
+- throws: BridgeAmountExceeded if amount exceeds maxBridge
+
+- throws: MaxSupplyExceeded if the mint would exceed initialSupply
 
 
 ```solidity
-function bridgeMint(address to, uint256 amount) external onlyRole(BRIDGE_ROLE);
+function bridgeMint(address to, uint256 amount) external whenNotPaused onlyRole(BRIDGE_ROLE);
 ```
 **Parameters**
 
 |Name|Type|Description|
 |----|----|-----------|
-|`to`|`address`|The address that will receive the minted tokens.|
-|`amount`|`uint256`|The amount of tokens to mint.|
+|`to`|`address`|Address receiving the tokens|
+|`amount`|`uint256`|Amount to mint|
+
+
+### updateMaxBridgeAmount
+
+Only callable by admin role
+
+*Updates the maximum allowed bridge amount per transaction*
+
+**Notes:**
+- requires-role: DEFAULT_ADMIN_ROLE
+
+- requires: New amount must be greater than zero
+
+- events-emits: [MaxBridgeUpdated](/contracts/ecosystem/GovernanceToken.sol/contract.GovernanceToken.md#maxbridgeupdated) event
+
+- throws: ZeroAmount if newMaxBridge is zero
+
+
+```solidity
+function updateMaxBridgeAmount(uint256 newMaxBridge) external onlyRole(DEFAULT_ADMIN_ROLE);
+```
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`newMaxBridge`|`uint256`|New maximum bridge amount|
 
 
 ### nonces
@@ -379,8 +420,24 @@ event BridgeMint(address indexed src, address indexed to, uint256 amount);
 |`to`|`address`|beneficiary address|
 |`amount`|`uint256`|token amount|
 
+### MaxBridgeUpdated
+*Emitted when the maximum bridge amount is updated*
+
+
+```solidity
+event MaxBridgeUpdated(address indexed admin, uint256 oldMaxBridge, uint256 newMaxBridge);
+```
+
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`admin`|`address`|The address that updated the value|
+|`oldMaxBridge`|`uint256`|Previous maximum bridge amount|
+|`newMaxBridge`|`uint256`|New maximum bridge amount|
+
 ### Upgrade
-*event emitted on UUPS upgrades*
+*Upgrade Event.*
 
 
 ```solidity
@@ -392,20 +449,62 @@ event Upgrade(address indexed src, address indexed implementation);
 |Name|Type|Description|
 |----|----|-----------|
 |`src`|`address`|sender address|
-|`implementation`|`address`|new implementation address|
+|`implementation`|`address`|address|
 
 ## Errors
-### CustomError
-*CustomError message*
+### ZeroAddress
+*Error thrown when an address parameter is zero*
 
 
 ```solidity
-error CustomError(string msg);
+error ZeroAddress();
 ```
 
-**Parameters**
+### ZeroAmount
+*Error thrown when an amount parameter is zero*
 
-|Name|Type|Description|
-|----|----|-----------|
-|`msg`|`string`|error description message|
+
+```solidity
+error ZeroAmount();
+```
+
+### MaxSupplyExceeded
+*Error thrown when a mint would exceed the max supply*
+
+
+```solidity
+error MaxSupplyExceeded(uint256 requested, uint256 maxAllowed);
+```
+
+### BridgeAmountExceeded
+*Error thrown when bridge amount exceeds allowed limit*
+
+
+```solidity
+error BridgeAmountExceeded(uint256 requested, uint256 maxAllowed);
+```
+
+### TGEAlreadyInitialized
+*Error thrown when TGE is already initialized*
+
+
+```solidity
+error TGEAlreadyInitialized();
+```
+
+### InvalidAddress
+*Error thrown when addresses don't match expected values*
+
+
+```solidity
+error InvalidAddress(address provided, string reason);
+```
+
+### ValidationFailed
+*Error thrown for general validation failures*
+
+
+```solidity
+error ValidationFailed(string reason);
+```
 
