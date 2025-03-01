@@ -1,5 +1,75 @@
 # Ecosystem
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/07f5cb7369219dbffd648091ffbddb6d70a0157c/contracts/ecosystem/Ecosystem.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/05bc99b130950ac71cca48b96856e5ce17a94027/contracts/ecosystem/Ecosystem.sol)
+
+
+## Overview
+The Ecosystem contract serves as a token distribution and management hub for the Lendefi DAO, handling airdrops, rewards, token burning, and partnership vesting. It's designed with a strong emphasis on security, role-based access control, and upgradeability.
+
+## Architecture and Design
+
+### Contract Structure
+- **Well-organized inheritance**: Follows a clear inheritance pattern using OpenZeppelin's upgradeable contracts
+- **Role separation**: Uses granular role-based access control with specialized roles for each function
+- **Token distribution mechanisms**: Implements four distinct distribution strategies (airdrops, rewards, burns, partnership vesting)
+- **Supply tracking**: Maintains careful accounting of token allocations and distributions
+
+### Token Economics
+- **Defined allocations**: Allocates token supply in predetermined percentages:
+  - 26% for rewards
+  - 10% for airdrops
+  - 8% for partnerships
+- **Distribution limits**: Sets rational bounds with maxReward (0.1% of reward supply) and maxBurn (2% of reward supply)
+- **Partnership vesting**: Creates dedicated vesting contracts using OpenZeppelin's VestingWallet
+
+## Security Analysis
+
+### Strengths
+1. **Comprehensive role management**:
+   - MANAGER_ROLE for administrative functions
+   - PAUSER_ROLE for emergency controls
+   - BURNER_ROLE for token burning
+   - REWARDER_ROLE for issuing rewards
+   - UPGRADER_ROLE for contract upgrades
+
+2. **Multiple safety mechanisms**:
+   - ReentrancyGuard on all fund-moving functions
+   - Pausable functionality for emergency situations
+   - Strict supply limits and accounting
+   - SafeERC20 usage for token transfers
+   - SafeCast for type conversions
+   - Rejection of direct ETH transfers
+
+3. **Input validation**:
+   - Zero address checks
+   - Amount validation with minimum and maximum thresholds
+   - Supply limit enforcement
+   - Gas-aware array processing (4000 recipient limit for airdrops)
+
+### Potential Concerns
+1. **Centralization risks**: Heavy reliance on role-based permissions could centralize control depending on role assignment
+2. **Fixed allocation percentages**: Token allocations are hardcoded at initialization without adjustment mechanisms
+3. **Immutable partner vesting**: Once created, partner vesting contracts cannot be modified
+4. **No recovery mechanism**: No functionality to recover accidentally sent tokens
+
+## Gas Efficiency
+- Efficient loop construction in airdrop function
+- Smart gas limit handling (limits airdrop arrays to 4000 entries)
+- Use of custom errors instead of string messages
+- Calldata parameters for arrays
+
+## Upgradeability
+- Properly implemented UUPS pattern
+- Version tracking with increment on upgrade
+- Storage gap for future extensions
+- Clear upgrade authorization controls
+
+## Code Quality and Documentation
+- Excellent NatSpec documentation
+- Clear error messages and custom errors
+- Thorough event emissions for important state changes
+- Detailed parameter validation explanations
+
+
 
 **Inherits:**
 [IECOSYSTEM](/contracts/interfaces/IEcosystem.sol/interface.IECOSYSTEM.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -169,15 +239,6 @@ uint256[50] private __gap;
 
 
 ## Functions
-### receive
-
-*Prevents receiving Ether*
-
-
-```solidity
-receive() external payable;
-```
-
 ### constructor
 
 **Note:**
@@ -186,6 +247,15 @@ oz-upgrades-unsafe-allow: constructor
 
 ```solidity
 constructor();
+```
+
+### receive
+
+*Prevents receiving Ether*
+
+
+```solidity
+receive() external payable;
 ```
 
 ### initialize
@@ -407,6 +477,38 @@ function addPartner(address partner, uint256 amount, uint256 cliff, uint256 dura
 |`amount`|`uint256`|The amount of tokens to be vested.|
 |`cliff`|`uint256`|The duration in seconds of the cliff period.|
 |`duration`|`uint256`|The duration in seconds of the vesting period.|
+
+
+### updateMaxReward
+
+Allows updating the maximum reward that can be issued in a single transaction.
+
+*Updates the maximum one-time reward amount.*
+
+**Notes:**
+- requires-role: MANAGER_ROLE
+
+- requires: Contract must not be paused
+
+- requires: New max reward must be greater than 0
+
+- requires: New max reward must not exceed 5% of remaining reward supply
+
+- events-emits: {MaxRewardUpdated} event
+
+- throws: CustomError("INVALID_AMOUNT") if the amount is 0
+
+- throws: CustomError("EXCESSIVE_MAX_REWARD") if the amount exceeds 5% of remaining reward supply
+
+
+```solidity
+function updateMaxReward(uint256 newMaxReward) external whenNotPaused onlyRole(MANAGER_ROLE);
+```
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`newMaxReward`|`uint256`|The new maximum reward amount.|
 
 
 ### _authorizeUpgrade
