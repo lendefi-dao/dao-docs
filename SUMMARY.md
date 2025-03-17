@@ -32,4 +32,5 @@
     - [TeamManager](audit/ecosystem/TeamManager.md)
     - [TeamVesting](audit/ecosystem/TeamVesting.md)
     - [Treasury](audit/ecosystem/Treasury.md)
+    - [Deploy](audit/ecosystem/DeployScript.md)
 
