@@ -24,7 +24,7 @@
     - [IWETH9](contracts/interfaces/IWETH9.sol/interface.IWETH9.md)
     - [IYODAMATH](contracts/interfaces/IYodaMath.sol/interface.IYODAMATH.md)
 # audit
-  - [❱ ecosystem](audit/README.md)
+  - [❱ audit](audit/README.md)
     - [Ecosystem](audit/ecosystem/Ecosystem.md)
     - [GovernanceToken](audit/ecosystem/GovernanceToken.md)
     - [InvestmentManager](audit/ecosystem/InvestmentManager.md)
