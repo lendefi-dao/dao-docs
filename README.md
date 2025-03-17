@@ -91,11 +91,6 @@ Some libraries included with this software are licenced under the MIT license, w
 require GPL-v3.0. The smart contracts are labeled accordingly.
 
 
-## Running tests
-
-This is a foundry repository. To get more information visit [Foundry](https://github.com/foundry-rs/foundry/blob/master/foundryup/README.md).
-You must have foundry installed.
-
 
 ## Running tests
 
