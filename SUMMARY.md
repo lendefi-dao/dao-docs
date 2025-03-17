@@ -21,8 +21,6 @@
     - [ITEAMVESTING](contracts/interfaces/ITeamVesting.sol/interface.ITEAMVESTING.md)
     - [ITREASURY](contracts/interfaces/ITreasury.sol/interface.ITREASURY.md)
     - [IVESTING](contracts/interfaces/IVesting.sol/interface.IVESTING.md)
-    - [IWETH9](contracts/interfaces/IWETH9.sol/interface.IWETH9.md)
-    - [IYODAMATH](contracts/interfaces/IYodaMath.sol/interface.IYODAMATH.md)
 # audit
   - [❱ audit](audit/README.md)
     - [Ecosystem](audit/ecosystem/Ecosystem.md)
