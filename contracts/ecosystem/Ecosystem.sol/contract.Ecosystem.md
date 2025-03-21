@@ -1,5 +1,5 @@
 # Ecosystem
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/Ecosystem.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/4ce7de4eccf88d9cd0d4a2b45cf076c8b6bf1102/contracts/ecosystem/Ecosystem.sol)
 
 **Inherits:**
 [IECOSYSTEM](/contracts/interfaces/IEcosystem.sol/interface.IECOSYSTEM.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -272,20 +272,31 @@ receive() external payable;
 
 ### initialize
 
-Sets up the initial state of the contract, including roles and token supplies.
+Initializes the Ecosystem contract with core dependencies and configurations
 
-*Initializes the ecosystem contract.*
+*Sets up the contract with initial token allocations, roles, and limits*
 
 **Notes:**
-- requires: All input addresses must not be zero.
+- security: Uses initializer modifier to prevent multiple initializations
 
-- requires-role: DEFAULT_ADMIN_ROLE for the guardian.
+- security-roles: Grants the following roles:
+- DEFAULT_ADMIN_ROLE to timelock
+- MANAGER_ROLE to timelock
+- PAUSER_ROLE to timelock
+- UPGRADER_ROLE to both timelock and multisig
 
-- requires-role: PAUSER_ROLE for the pauser.
+- allocation: Configures token allocations as follows:
+- 26% for rewards
+- 10% for airdrops
+- 8% for partnerships
 
-- events-emits: {Initialized} event.
+- limits: Sets initial limits:
+- maxReward: 0.1% of reward supply
+- maxBurn: 2% of reward supply
 
-- throws: ZeroAddressDetected if any of the input addresses are zero.
+- events-emits: {Initialized} when initialization is complete
+
+- throws: ZeroAddressDetected if any input address is zero
 
 
 ```solidity
@@ -295,9 +306,9 @@ function initialize(address token, address timelockAddr, address multisig) exter
 
 |Name|Type|Description|
 |----|----|-----------|
-|`token`|`address`|The address of the governance token.|
-|`timelockAddr`|`address`|The address of the timelock controller for partner vesting cancellation.|
-|`multisig`|`address`|The address of the pauser.|
+|`token`|`address`|Address of the LENDEFI token contract|
+|`timelockAddr`|`address`|Address of the timelock contract that will have admin control|
+|`multisig`|`address`|Address of the multisig wallet that will have upgrade rights|
 
 
 ### pause
