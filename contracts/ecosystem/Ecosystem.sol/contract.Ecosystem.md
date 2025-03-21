@@ -1,5 +1,5 @@
 # Ecosystem
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/ecosystem/Ecosystem.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/Ecosystem.sol)
 
 **Inherits:**
 [IECOSYSTEM](/contracts/interfaces/IEcosystem.sol/interface.IECOSYSTEM.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -289,7 +289,7 @@ Sets up the initial state of the contract, including roles and token supplies.
 
 
 ```solidity
-function initialize(address token, address timelockAddr, address guardian, address multisig) external initializer;
+function initialize(address token, address timelockAddr, address multisig) external initializer;
 ```
 **Parameters**
 
@@ -297,7 +297,6 @@ function initialize(address token, address timelockAddr, address guardian, addre
 |----|----|-----------|
 |`token`|`address`|The address of the governance token.|
 |`timelockAddr`|`address`|The address of the timelock controller for partner vesting cancellation.|
-|`guardian`|`address`|The address of the guardian (admin).|
 |`multisig`|`address`|The address of the pauser.|
 
 
