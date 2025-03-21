@@ -1,5 +1,5 @@
 # InvestmentManager
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/ecosystem/InvestmentManager.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/InvestmentManager.sol)
 
 **Inherits:**
 [IINVMANAGER](/contracts/interfaces/IInvestmentManager.sol/interface.IINVMANAGER.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -361,9 +361,7 @@ throws: ZeroAddressDetected if any parameter is the zero address
 
 
 ```solidity
-function initialize(address token, address timelock_, address treasury_, address guardian, address gnosisSafe)
-    external
-    initializer;
+function initialize(address token, address timelock_, address treasury_) external initializer;
 ```
 **Parameters**
 
@@ -372,8 +370,6 @@ function initialize(address token, address timelock_, address treasury_, address
 |`token`|`address`|Address of the ecosystem token|
 |`timelock_`|`address`|Address of the timelock controller|
 |`treasury_`|`address`|Address of the treasury contract|
-|`guardian`|`address`|Address with pause/unpause authority|
-|`gnosisSafe`|`address`|Address of the multisig for management operations|
 
 
 ### pause
