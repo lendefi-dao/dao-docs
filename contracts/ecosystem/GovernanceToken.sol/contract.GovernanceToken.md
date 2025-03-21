@@ -1,5 +1,5 @@
 # GovernanceToken
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/ecosystem/GovernanceToken.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/GovernanceToken.sol)
 
 **Inherits:**
 ERC20Upgradeable, ERC20BurnableUpgradeable, ERC20PausableUpgradeable, AccessControlUpgradeable, ERC20PermitUpgradeable, ERC20VotesUpgradeable, UUPSUpgradeable
@@ -213,7 +213,7 @@ Sets up the initial state of the contract, including roles and token supplies.
 
 
 ```solidity
-function initializeUUPS(address guardian, address timelock, address multisig) external initializer;
+function initializeUUPS(address guardian, address timelock) external initializer;
 ```
 **Parameters**
 
@@ -221,7 +221,6 @@ function initializeUUPS(address guardian, address timelock, address multisig) ex
 |----|----|-----------|
 |`guardian`|`address`|The address of the guardian (admin).|
 |`timelock`|`address`|The address of the timelock controller.|
-|`multisig`|`address`|The address of the multisig wallet.|
 
 
 ### setBridgeAddress
