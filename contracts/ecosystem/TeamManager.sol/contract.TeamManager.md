@@ -1,5 +1,5 @@
 # TeamManager
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/ecosystem/TeamManager.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/TeamManager.sol)
 
 **Inherits:**
 [ITEAMMANAGER](/contracts/interfaces/ITeamManager.sol/interface.ITEAMMANAGER.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -237,7 +237,7 @@ Initializes the team manager contract
 
 
 ```solidity
-function initialize(address token, address timelock_, address guardian, address multisig) external initializer;
+function initialize(address token, address timelock_, address multisig) external initializer;
 ```
 **Parameters**
 
@@ -245,7 +245,6 @@ function initialize(address token, address timelock_, address guardian, address 
 |----|----|-----------|
 |`token`|`address`|The address of the ecosystem token contract|
 |`timelock_`|`address`|The address of the timelock controller|
-|`guardian`|`address`|The address of the admin who receives PAUSER_ROLE|
 |`multisig`|`address`|The address receiving UPGRADER_ROLE|
 
 
