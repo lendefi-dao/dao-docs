@@ -1,5 +1,5 @@
 # Treasury
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/ecosystem/Treasury.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/Treasury.sol)
 
 **Inherits:**
 [ITREASURY](/contracts/interfaces/ITreasury.sol/interface.ITREASURY.md), Initializable, UUPSUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable
@@ -190,10 +190,9 @@ Initializes the treasury contract
 
 
 ```solidity
-function initialize(address guardian, address timelock, address multisig, uint256 startOffset, uint256 vestingDuration)
+function initialize(address timelock, address multisig, uint256 startOffset, uint256 vestingDuration)
     external
     initializer
-    nonZeroAddress(guardian)
     nonZeroAddress(timelock)
     nonZeroAddress(multisig);
 ```
@@ -201,7 +200,6 @@ function initialize(address guardian, address timelock, address multisig, uint25
 
 |Name|Type|Description|
 |----|----|-----------|
-|`guardian`|`address`|The address that will have the PAUSER_ROLE|
 |`timelock`|`address`|The address that will have the DEFAULT_ADMIN_ROLE and MANAGER_ROLE|
 |`multisig`|`address`|The address of the Gnosis Safe multisig that will be granted the UPGRADER_ROLE|
 |`startOffset`|`uint256`|The number of seconds the start time is before the current block timestamp|
