@@ -1,5 +1,5 @@
 # IINVMANAGER
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/interfaces/IInvestmentManager.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/interfaces/IInvestmentManager.sol)
 
 Interface for the contract that manages investment rounds and token vesting
 
@@ -13,8 +13,7 @@ Interface for the contract that manages investment rounds and token vesting
 
 
 ```solidity
-function initialize(address token, address timelock_, address treasury_, address guardian, address gnosisSafe)
-    external;
+function initialize(address token, address timelock_, address treasury_) external;
 ```
 **Parameters**
 
@@ -23,8 +22,6 @@ function initialize(address token, address timelock_, address treasury_, address
 |`token`|`address`|Address of the ecosystem token|
 |`timelock_`|`address`|Address of the timelock controller|
 |`treasury_`|`address`|Address of the treasury|
-|`guardian`|`address`|Address of the guardian (receives PAUSER_ROLE)|
-|`gnosisSafe`|`address`|Address of the multisig (receives UPGRADER_ROLE)|
 
 
 ### pause
