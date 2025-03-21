@@ -1,5 +1,5 @@
 # IECOSYSTEM
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/3d33c9e00b25d5e60bf76d9b812b64e31361ab4a/contracts/interfaces/IEcosystem.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/interfaces/IEcosystem.sol)
 
 Interface for the Ecosystem contract that handles airdrops, rewards, burning, partnerships, and secure upgrades
 
@@ -20,7 +20,7 @@ Initializes the ecosystem contract
 
 
 ```solidity
-function initialize(address token, address timelockAddr, address guardian, address multisig) external;
+function initialize(address token, address timelockAddr, address multisig) external;
 ```
 **Parameters**
 
@@ -28,7 +28,6 @@ function initialize(address token, address timelockAddr, address guardian, addre
 |----|----|-----------|
 |`token`|`address`|Address of the governance token|
 |`timelockAddr`|`address`|Address of the timelock controller for partner vesting cancellation|
-|`guardian`|`address`|Address of the guardian (receives PAUSER_ROLE)|
 |`multisig`|`address`|Address of the multisig (receives UPGRADER_ROLE)|
 
 
