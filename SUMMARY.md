@@ -12,7 +12,6 @@
     - [TeamVesting](contracts/ecosystem/TeamVesting.sol/contract.TeamVesting.md)
     - [Treasury](contracts/ecosystem/Treasury.sol/contract.Treasury.md)
   - [❱ interfaces](contracts/interfaces/README.md)
-    - [IERC20Bridgable](contracts/interfaces/IERC20Bridgable.sol/interface.IERC20Bridgable.md)
     - [IECOSYSTEM](contracts/interfaces/IEcosystem.sol/interface.IECOSYSTEM.md)
     - [IINVMANAGER](contracts/interfaces/IInvestmentManager.sol/interface.IINVMANAGER.md)
     - [ILENDEFI](contracts/interfaces/ILendefi.sol/interface.ILENDEFI.md)
