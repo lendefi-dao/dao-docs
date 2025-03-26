@@ -1,5 +1,5 @@
 # InvestmentManager
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/InvestmentManager.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/ecosystem/InvestmentManager.sol)
 
 **Inherits:**
 [IINVMANAGER](/contracts/interfaces/IInvestmentManager.sol/interface.IINVMANAGER.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -810,50 +810,6 @@ function claimRefund(uint32 roundId) external validRound(roundId) nonReentrant;
 |`roundId`|`uint32`|The ID of the investment round|
 
 
-### investEther
-
-Processes ETH investment in a specific investment round
-
-*Handles direct investment and fallback function investments*
-
-**Notes:**
-- security: Uses nonReentrant guard for ETH transfers
-
-- security: Validates round status and investor allocation
-
-- security: Enforces investment limits and round constraints
-
-- events-emits: {Invest} when investment is processed
-
-- events-emits: {RoundComplete} if round target is reached
-
-- modifiers: validRound, activeRound, whenNotPaused, nonReentrant
-
-- throws: RoundEnded if round end time has passed
-
-- throws: RoundOversubscribed if maximum investor count reached
-
-- throws: NoAllocation if sender has no allocation
-
-- throws: AmountAllocationMismatch if sent ETH doesn't match remaining allocation
-
-
-```solidity
-function investEther(uint32 roundId)
-    public
-    payable
-    validRound(roundId)
-    activeRound(roundId)
-    whenNotPaused
-    nonReentrant;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`roundId`|`uint32`|The ID of the investment round|
-
-
 ### upgradeTimelockRemaining
 
 Calculates remaining time in the upgrade timelock period
@@ -992,6 +948,50 @@ function getRoundInvestors(uint32 roundId) external view returns (address[] memo
 |Name|Type|Description|
 |----|----|-----------|
 |`<none>`|`address[]`|address[] Array of investor addresses in the round|
+
+
+### investEther
+
+Processes ETH investment in a specific investment round
+
+*Handles direct investment and fallback function investments*
+
+**Notes:**
+- security: Uses nonReentrant guard for ETH transfers
+
+- security: Validates round status and investor allocation
+
+- security: Enforces investment limits and round constraints
+
+- events-emits: {Invest} when investment is processed
+
+- events-emits: {RoundComplete} if round target is reached
+
+- modifiers: validRound, activeRound, whenNotPaused, nonReentrant
+
+- throws: RoundEnded if round end time has passed
+
+- throws: RoundOversubscribed if maximum investor count reached
+
+- throws: NoAllocation if sender has no allocation
+
+- throws: AmountAllocationMismatch if sent ETH doesn't match remaining allocation
+
+
+```solidity
+function investEther(uint32 roundId)
+    public
+    payable
+    validRound(roundId)
+    activeRound(roundId)
+    whenNotPaused
+    nonReentrant;
+```
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`roundId`|`uint32`|The ID of the investment round|
 
 
 ### getCurrentRound
