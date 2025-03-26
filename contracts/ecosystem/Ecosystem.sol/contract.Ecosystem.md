@@ -1,5 +1,5 @@
 # Ecosystem
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/4ce7de4eccf88d9cd0d4a2b45cf076c8b6bf1102/contracts/ecosystem/Ecosystem.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/ecosystem/Ecosystem.sol)
 
 **Inherits:**
 [IECOSYSTEM](/contracts/interfaces/IEcosystem.sol/interface.IECOSYSTEM.md), Initializable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
@@ -363,21 +363,6 @@ function scheduleUpgrade(address newImplementation)
 |`newImplementation`|`address`|Address of the new implementation|
 
 
-### upgradeTimelockRemaining
-
-*Returns the remaining time before a scheduled upgrade can be executed*
-
-
-```solidity
-function upgradeTimelockRemaining() external view returns (uint256);
-```
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`uint256`|The time remaining in seconds, or 0 if no upgrade is scheduled or timelock has passed|
-
-
 ### emergencyWithdrawToken
 
 Only callable by addresses with MANAGER_ROLE
@@ -679,6 +664,21 @@ function updateMaxBurn(uint256 newMaxBurn) external whenNotPaused onlyRole(MANAG
 |Name|Type|Description|
 |----|----|-----------|
 |`newMaxBurn`|`uint256`|The new maximum burn amount.|
+
+
+### upgradeTimelockRemaining
+
+*Returns the remaining time before a scheduled upgrade can be executed*
+
+
+```solidity
+function upgradeTimelockRemaining() external view returns (uint256);
+```
+**Returns**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`<none>`|`uint256`|The time remaining in seconds, or 0 if no upgrade is scheduled or timelock has passed|
 
 
 ### availableRewardSupply
