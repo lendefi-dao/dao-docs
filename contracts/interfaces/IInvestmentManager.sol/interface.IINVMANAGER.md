@@ -1,5 +1,5 @@
 # IINVMANAGER
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/interfaces/IInvestmentManager.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/interfaces/IInvestmentManager.sol)
 
 Interface for the contract that manages investment rounds and token vesting
 
@@ -1107,7 +1107,9 @@ error ZeroBalance();
 
 ## Structs
 ### Allocation
-*Structure containing allocation details for an investor*
+Investor allocation details
+
+*Tracks individual investor allocations within a round*
 
 
 ```solidity
@@ -1117,8 +1119,17 @@ struct Allocation {
 }
 ```
 
+**Properties**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`etherAmount`|`uint256`|Maximum ETH that can be invested|
+|`tokenAmount`|`uint256`|Tokens to be received for full allocation|
+
 ### Round
-*Structure containing details of an investment round*
+Investment round details
+
+*Contains all parameters and current state of an investment round*
 
 
 ```solidity
@@ -1136,8 +1147,25 @@ struct Round {
 }
 ```
 
+**Properties**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`etherTarget`|`uint256`|Total ETH to be raised|
+|`etherInvested`|`uint256`|Current amount of ETH invested|
+|`tokenAllocation`|`uint256`|Total tokens allocated to the round|
+|`tokenDistributed`|`uint256`|Tokens that have been distributed to vesting contracts|
+|`startTime`|`uint64`|Round opening timestamp|
+|`endTime`|`uint64`|Round closing timestamp|
+|`vestingCliff`|`uint64`|Time before vesting begins|
+|`vestingDuration`|`uint64`|Total vesting period length|
+|`participants`|`uint32`|Number of investors in the round|
+|`status`|`RoundStatus`|Current state of the round|
+
 ### UpgradeRequest
-*Structure to track pending upgrades with timelock*
+Upgrade request details
+
+*Tracks pending contract upgrades with timelock*
 
 
 ```solidity
@@ -1147,6 +1175,14 @@ struct UpgradeRequest {
     bool exists;
 }
 ```
+
+**Properties**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`implementation`|`address`|New implementation contract address|
+|`scheduledTime`|`uint64`|When the upgrade was requested|
+|`exists`|`bool`|Whether this upgrade request is active|
 
 ## Enums
 ### RoundStatus

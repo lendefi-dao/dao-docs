@@ -1,5 +1,5 @@
 # ITEAMVESTING
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/interfaces/ITeamVesting.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/interfaces/ITeamVesting.sol)
 
 **Note:**
 security-contact: security@nebula-labs.xyz
@@ -93,14 +93,20 @@ function release() external;
 
 ### cancelContract
 
-*Release the tokens that have already vested.
-Emits a [ERC20Released](/contracts/interfaces/ITeamVesting.sol/interface.ITEAMVESTING.md#erc20released) event.
-Refund the remainder to the timelock*
+Cancels the vesting contract and refunds remaining tokens
+
+*Release the tokens that have already vested.*
 
 
 ```solidity
 function cancelContract() external returns (uint256 remainder);
 ```
+**Returns**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`remainder`|`uint256`|Amount of tokens returned to the timelock Emits a [ERC20Released](/contracts/interfaces/ITeamVesting.sol/interface.ITEAMVESTING.md#erc20released) event. Refund the remainder to the timelock|
+
 
 ## Events
 ### Cancelled
@@ -141,6 +147,16 @@ event VestingInitialized(
     address indexed token, address indexed beneficiary, address indexed timelock, uint64 startTimestamp, uint64 duration
 );
 ```
+
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`token`|`address`|Address of the vested token contract|
+|`beneficiary`|`address`|Address that will receive the vested tokens|
+|`timelock`|`address`|Address of the timelock contract that can cancel vesting|
+|`startTimestamp`|`uint64`|Unix timestamp when vesting begins|
+|`duration`|`uint64`|Length of the vesting period in seconds|
 
 ## Errors
 ### Unauthorized

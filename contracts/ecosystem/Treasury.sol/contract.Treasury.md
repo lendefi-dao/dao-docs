@@ -1,5 +1,5 @@
 # Treasury
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/Treasury.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/ecosystem/Treasury.sol)
 
 **Inherits:**
 [ITREASURY](/contracts/interfaces/ITreasury.sol/interface.ITREASURY.md), Initializable, UUPSUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ReentrancyGuardUpgradeable
@@ -573,6 +573,23 @@ function released(address token) public view virtual override returns (uint256);
 |`<none>`|`uint256`|Amount of tokens released so far|
 
 
+### _authorizeUpgrade
+
+Authorizes and processes contract upgrades with timelock enforcement
+
+*Internal override for UUPS upgrade authorization*
+
+
+```solidity
+function _authorizeUpgrade(address newImplementation) internal override onlyRole(UPGRADER_ROLE);
+```
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`newImplementation`|`address`|Address of the new implementation contract|
+
+
 ### _vestingSchedule
 
 *Internal function to calculate vested amounts for a given allocation and timestamp*
@@ -595,22 +612,5 @@ function _vestingSchedule(uint256 totalAllocation, uint256 timestamp) internal v
 |Name|Type|Description|
 |----|----|-----------|
 |`<none>`|`uint256`|The amount vested at the specified timestamp|
-
-
-### _authorizeUpgrade
-
-Authorizes and processes contract upgrades with timelock enforcement
-
-*Internal override for UUPS upgrade authorization*
-
-
-```solidity
-function _authorizeUpgrade(address newImplementation) internal override onlyRole(UPGRADER_ROLE);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`newImplementation`|`address`|Address of the new implementation contract|
 
 

@@ -1,5 +1,5 @@
 # LendefiGovernor
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/ecosystem/LendefiGovernor.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/ecosystem/LendefiGovernor.sol)
 
 **Inherits:**
 GovernorUpgradeable, GovernorSettingsUpgradeable, GovernorCountingSimpleUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable, GovernorTimelockControlUpgradeable, AccessControlUpgradeable, UUPSUpgradeable
@@ -179,6 +179,17 @@ function upgradeTimelockRemaining() external view returns (uint256);
 |`<none>`|`uint256`|timeRemaining The time remaining in seconds, or 0 if no upgrade is scheduled or timelock has passed|
 
 
+### supportsInterface
+
+
+```solidity
+function supportsInterface(bytes4 interfaceId)
+    public
+    view
+    override(GovernorUpgradeable, AccessControlUpgradeable)
+    returns (bool);
+```
+
 ### votingDelay
 
 
@@ -269,6 +280,13 @@ function _cancel(address[] memory targets, uint256[] memory values, bytes[] memo
     returns (uint256);
 ```
 
+### _authorizeUpgrade
+
+
+```solidity
+function _authorizeUpgrade(address newImplementation) internal override onlyRole(UPGRADER_ROLE);
+```
+
 ### _executor
 
 
@@ -278,24 +296,6 @@ function _executor()
     view
     override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
     returns (address);
-```
-
-### supportsInterface
-
-
-```solidity
-function supportsInterface(bytes4 interfaceId)
-    public
-    view
-    override(GovernorUpgradeable, AccessControlUpgradeable)
-    returns (bool);
-```
-
-### _authorizeUpgrade
-
-
-```solidity
-function _authorizeUpgrade(address newImplementation) internal override onlyRole(UPGRADER_ROLE);
 ```
 
 ## Events

@@ -1,5 +1,5 @@
 # ITREASURY
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/interfaces/ITreasury.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/interfaces/ITreasury.sol)
 
 Interface for the Treasury contract with linear vesting, timelock upgrades and multisig support
 
@@ -629,7 +629,9 @@ error ZeroBalance();
 
 ## Structs
 ### UpgradeRequest
-*Structure to track pending upgrades with timelock*
+Upgrade request details
+
+*Tracks pending contract upgrades with timelock*
 
 
 ```solidity
@@ -639,4 +641,12 @@ struct UpgradeRequest {
     bool exists;
 }
 ```
+
+**Properties**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`implementation`|`address`|New implementation contract address|
+|`scheduledTime`|`uint64`|When the upgrade was requested|
+|`exists`|`bool`|Whether this upgrade request is active|
 

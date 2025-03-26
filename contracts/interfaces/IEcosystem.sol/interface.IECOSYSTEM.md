@@ -1,5 +1,5 @@
 # IECOSYSTEM
-[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/282ea4ae9536ece009db3272e275bd3a38325c0a/contracts/interfaces/IEcosystem.sol)
+[Git Source](https://github.com/nebula-labs-xyz/lendefi-dao/blob/7f0eb7a5b5767e3eed9a3c2d01ebe6a782dcd6dc/contracts/interfaces/IEcosystem.sol)
 
 Interface for the Ecosystem contract that handles airdrops, rewards, burning, partnerships, and secure upgrades
 
@@ -27,8 +27,8 @@ function initialize(address token, address timelockAddr, address multisig) exter
 |Name|Type|Description|
 |----|----|-----------|
 |`token`|`address`|Address of the governance token|
-|`timelockAddr`|`address`|Address of the timelock controller for partner vesting cancellation|
-|`multisig`|`address`|Address of the multisig (receives UPGRADER_ROLE)|
+|`timelockAddr`|`address`|Address of the timelock controller|
+|`multisig`|`address`|Address of the multisig wallet|
 
 
 ### pause
@@ -70,6 +70,17 @@ function scheduleUpgrade(address newImplementation) external;
 |`newImplementation`|`address`|Address of the new implementation|
 
 
+### cancelUpgrade
+
+Cancels a previously scheduled upgrade
+
+*Can only be called by accounts with the UPGRADER_ROLE*
+
+
+```solidity
+function cancelUpgrade() external;
+```
+
 ### upgradeTimelockRemaining
 
 Returns the remaining time before a scheduled upgrade can be executed
@@ -108,7 +119,7 @@ function emergencyWithdrawToken(address token) external;
 
 Distributes tokens to multiple recipients
 
-*Performs an airdrop of a fixed amount of tokens to each address in the recipients array*
+*Can only be called by accounts with the MANAGER_ROLE*
 
 
 ```solidity
@@ -126,7 +137,7 @@ function airdrop(address[] calldata recipients, uint256 amount) external;
 
 Rewards a single address with tokens
 
-*Transfers a specified amount of tokens to a recipient as a reward*
+*Can only be called by accounts with the MANAGER_ROLE*
 
 
 ```solidity
@@ -144,7 +155,7 @@ function reward(address to, uint256 amount) external;
 
 Burns tokens from the reward supply
 
-*Permanently removes tokens from circulation, updating supply calculations*
+*Can only be called by accounts with the MANAGER_ROLE*
 
 
 ```solidity
@@ -161,7 +172,7 @@ function burn(uint256 amount) external;
 
 Creates a vesting contract for a new partner
 
-*Deploys a new PartnerVesting contract and funds it with the specified amount*
+*Can only be called by accounts with the MANAGER_ROLE*
 
 
 ```solidity
@@ -181,7 +192,7 @@ function addPartner(address partner, uint256 amount, uint256 cliff, uint256 dura
 
 Cancels a partner's vesting contract
 
-*Returns unvested tokens to the timelock and updates accounting*
+*Can only be called by the timelock*
 
 
 ```solidity
@@ -198,7 +209,7 @@ function cancelPartnership(address partner) external;
 
 Updates the maximum one-time reward amount
 
-*Sets a new limit on the maximum tokens that can be rewarded in one transaction*
+*Can only be called by accounts with the MANAGER_ROLE*
 
 
 ```solidity
@@ -215,7 +226,7 @@ function updateMaxReward(uint256 newMaxReward) external;
 
 Updates the maximum one-time burn amount
 
-*Sets a new limit on the maximum tokens that can be burned in one transaction*
+*Can only be called by accounts with the MANAGER_ROLE*
 
 
 ```solidity
@@ -232,7 +243,7 @@ function updateMaxBurn(uint256 newMaxBurn) external;
 
 Returns the available reward supply
 
-*Calculates tokens available for rewards by subtracting issued rewards from total supply*
+*Calculates remaining reward tokens*
 
 
 ```solidity
@@ -249,7 +260,7 @@ function availableRewardSupply() external view returns (uint256);
 
 Returns the available airdrop supply
 
-*Calculates tokens available for airdrops by subtracting issued airdrops from total supply*
+*Calculates remaining airdrop tokens*
 
 
 ```solidity
@@ -266,7 +277,7 @@ function availableAirdropSupply() external view returns (uint256);
 
 Returns the available partnership supply
 
-*Calculates tokens available for partnerships by subtracting issued partnerships from total supply*
+*Calculates remaining partnership tokens*
 
 
 ```solidity
@@ -281,11 +292,7 @@ function availablePartnershipSupply() external view returns (uint256);
 
 ### rewardSupply
 
-Information about the pending upgrade request
-
 Gets the total reward supply
-
-*Returns details of the currently scheduled upgrade, if any*
 
 
 ```solidity
@@ -295,7 +302,7 @@ function rewardSupply() external view returns (uint256);
 
 |Name|Type|Description|
 |----|----|-----------|
-|`<none>`|`uint256`|The pending upgrade request details|
+|`<none>`|`uint256`|The total reward supply|
 
 
 ### maxReward
@@ -469,24 +476,6 @@ function vestingContracts(address partner) external view returns (address);
 |`<none>`|`address`|The vesting contract address|
 
 
-### cancelUpgrade
-
-Cancels a previously scheduled upgrade
-
-*Removes a pending upgrade from the schedule*
-
-**Notes:**
-- access: Restricted to UPGRADER_ROLE
-
-- state-changes: 
-- Clears the pendingUpgrade data
-- Emits an UpgradeCancelled event
-
-
-```solidity
-function cancelUpgrade() external;
-```
-
 ## Events
 ### Initialized
 *Emitted when the contract is initialized*
@@ -647,7 +636,7 @@ event UpgradeScheduled(
 |`effectiveTime`|`uint64`|The time when the upgrade can be executed|
 
 ### UpgradeCancelled
-Emitted when a scheduled upgrade is cancelled
+*Emitted when a scheduled upgrade is cancelled*
 
 
 ```solidity
@@ -692,12 +681,18 @@ error ValidationFailed(string reason);
 |`reason`|`string`|Description of the validation failure|
 
 ### UpgradeTimelockActive
-*Thrown when trying to execute an upgrade too soon*
+*Error thrown if you try to upgrade while the timelock is active*
 
 
 ```solidity
 error UpgradeTimelockActive(uint256 remainingTime);
 ```
+
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`remainingTime`|`uint256`|Time remaining in the timelock period|
 
 ### UpgradeNotScheduled
 *Thrown when trying to execute an upgrade that wasn't scheduled*
@@ -714,6 +709,13 @@ error UpgradeNotScheduled();
 ```solidity
 error ImplementationMismatch(address expected, address provided);
 ```
+
+**Parameters**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`expected`|`address`|The implementation address that was scheduled|
+|`provided`|`address`|The implementation address that was attempted|
 
 ### ZeroAddressDetected
 *Error thrown when a zero address is provided where a non-zero address is required*
@@ -906,4 +908,12 @@ struct UpgradeRequest {
     bool exists;
 }
 ```
+
+**Properties**
+
+|Name|Type|Description|
+|----|----|-----------|
+|`implementation`|`address`|The address of the new implementation contract|
+|`scheduledTime`|`uint64`|The timestamp when the upgrade was scheduled|
+|`exists`|`bool`|Boolean flag indicating if an upgrade is currently scheduled|
 
