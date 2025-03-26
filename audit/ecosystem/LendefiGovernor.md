@@ -10,8 +10,6 @@
 
 The LendefiGovernor contract has been audited following the implementation of standardized security patterns across the Lendefi DAO ecosystem. The contract demonstrates a strong implementation of governance functionality combined with a secure upgrade mechanism. The migration from Ownable2Step to AccessControl successfully aligns the contract with the ecosystem's standardized role-based security model. No critical vulnerabilities were identified.
 
-
-
 ## Key Findings
 
 | Severity | Number of Findings |

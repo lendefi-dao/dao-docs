@@ -10,8 +10,6 @@
 
 The TeamVesting contract has been audited for security vulnerabilities and coding best practices. The contract implements a linear vesting schedule for Lendefi team members with appropriate access controls that allow team members to manage their vested tokens while giving the DAO (via timelock) the ability to cancel vesting if necessary. The contract demonstrates solid security practices with well-documented functions and clear separation of concerns. No critical vulnerabilities were identified.
 
-
-
 ## Key Findings
 
 | Severity | Number of Findings |
