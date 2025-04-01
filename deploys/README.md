@@ -1,6 +1,8 @@
 # Lendefi DAO Contract Addresses (Sepolia)
 
-Here are all the deployed contract addresses extracted from your deployment transaction:
+All contracts are now deployed and verified on Sepolia. For interaction with these contracts, you should primarily use the proxy addresses, as these are the actual contract instances that users and other contracts will interact with.
+
+The implementation addresses are the underlying logic contracts that can be upgraded in the future without changing the proxy addresses, maintaining the same contract identity and state.
 
 | Contract | Implementation Address | Proxy Address |
 |----------|------------------------|---------------|
@@ -11,6 +13,3 @@ Here are all the deployed contract addresses extracted from your deployment tran
 | **Treasury** | ```0x3db09bc076995ff7aabea7f22a9ed79f28f81d1d``` | ```0x506ec8413f1fe3224e5c2b07bc888baefb098e5f``` |
 | **TeamManager** | ```0x5cac32ca8c950a495e5ca5d47f619d89d72c48e4``` | ```0x74bea558c73b8a00b884a651ef0c7de0e44fe2f8``` |
 
-All contracts are now deployed and verified on Sepolia. For interaction with these contracts, you should primarily use the proxy addresses, as these are the actual contract instances that users and other contracts will interact with.
-
-The implementation addresses are the underlying logic contracts that can be upgraded in the future without changing the proxy addresses, maintaining the same contract identity and state.
