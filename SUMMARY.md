@@ -1,5 +1,17 @@
 # Summary
 - [Home](README.md)
+# audit
+  - [❱ audit](audit/README.md)
+    - [Ecosystem](audit/ecosystem/Ecosystem.md)
+    - [GovernanceToken](audit/ecosystem/GovernanceToken.md)
+    - [InvestmentManager](audit/ecosystem/InvestmentManager.md)
+    - [InvestorVesting](audit/ecosystem/InvestorVesting.md)
+    - [LendefiGovernor](audit/ecosystem/LendefiGovernor.md)
+    - [PartnerVesting](audit/ecosystem/PartnerVesting.md)
+    - [TeamManager](audit/ecosystem/TeamManager.md)
+    - [TeamVesting](audit/ecosystem/TeamVesting.md)
+    - [Treasury](audit/ecosystem/Treasury.md)
+    - [Deploy](audit/ecosystem/DeployScript.md)
 # contracts
   - [❱ ecosystem](contracts/ecosystem/README.md)
     - [Ecosystem](contracts/ecosystem/Ecosystem.sol/contract.Ecosystem.md)
@@ -20,16 +32,5 @@
     - [ITEAMVESTING](contracts/interfaces/ITeamVesting.sol/interface.ITEAMVESTING.md)
     - [ITREASURY](contracts/interfaces/ITreasury.sol/interface.ITREASURY.md)
     - [IVESTING](contracts/interfaces/IVesting.sol/interface.IVESTING.md)
-# audit
-  - [❱ audit](audit/README.md)
-    - [Ecosystem](audit/ecosystem/Ecosystem.md)
-    - [GovernanceToken](audit/ecosystem/GovernanceToken.md)
-    - [InvestmentManager](audit/ecosystem/InvestmentManager.md)
-    - [InvestorVesting](audit/ecosystem/InvestorVesting.md)
-    - [LendefiGovernor](audit/ecosystem/LendefiGovernor.md)
-    - [PartnerVesting](audit/ecosystem/PartnerVesting.md)
-    - [TeamManager](audit/ecosystem/TeamManager.md)
-    - [TeamVesting](audit/ecosystem/TeamVesting.md)
-    - [Treasury](audit/ecosystem/Treasury.md)
-    - [Deploy](audit/ecosystem/DeployScript.md)
-
+# deploys
+  - [❱ deploys](deploys/README.md)
