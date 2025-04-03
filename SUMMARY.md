@@ -34,3 +34,5 @@
     - [IVESTING](contracts/interfaces/IVesting.sol/interface.IVESTING.md)
 # deploys
   - [❱ deploys](deploys/README.md)
+# tokenomics
+  - [❱ tokenomics](tokenomics/README.md)
