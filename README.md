@@ -18,6 +18,8 @@
 The Lendefi DAO consists of several well-structured smart contracts implementing a comprehensive decentralized autonomous organization with governance, treasury management, investment rounds, and token economics. The codebase demonstrates strong security patterns and follows modern Solidity development practices.
 For more information visit [Lendefi DAO](https://lendefi.org).
 
+## Audits
+Audit were performed by solidproof.io, public report [SolidProof.io Audit](https://app.solidproof.io/projects/lendefi)
 
 ## Key Components
 
