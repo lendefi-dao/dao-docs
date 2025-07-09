@@ -1,5 +1,6 @@
 # Lendefi DAO Contract Addresses
-### Lendefi DAO Contract Addresses
+## Lendefi DAO Contract Addresses 
+
 For interaction with these contracts, you should primarily use the proxy addresses, as these are the actual contract instances that users and other contracts will interact with.
 
 The implementation addresses are the underlying logic contracts that can be upgraded in the future without changing the proxy addresses, maintaining the same contract identity and state.

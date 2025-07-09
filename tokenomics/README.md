@@ -1,5 +1,5 @@
 # Tokenomics Overview: Lendefi DAO ($LEND)
-### Tokenomics Overview: Lendefi DAO ($LEND)
+## Tokenomics Overview: Lendefi DAO ($LEND)
 
 After analyzing the contract implementations in detail, I can provide a more comprehensive tokenomics breakdown:
 
