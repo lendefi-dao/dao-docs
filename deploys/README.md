@@ -1,5 +1,5 @@
 # Lendefi DAO Contract Addresses
-## Lendefi DAO Contract Addresses 
+
 
 For interaction with these contracts, you should primarily use the proxy addresses, as these are the actual contract instances that users and other contracts will interact with.
 
@@ -18,4 +18,5 @@ The implementation addresses are the underlying logic contracts that can be upgr
 | **InvestmentManager** | `0x3179589e727f5e33eb697231e684c4fd8b07058d` | `0x58d6221a8e8e5a2d46467ba7a31bde5479fd821a` |
 
 
-# Chainlink CCIP BurnAndMint Pool: `0x934635de453a1161d02ce395f2f59e775597fe13`
+# Chainlink CCIP BurnAndMint Pool: 
+`0x934635de453a1161d02ce395f2f59e775597fe13`
