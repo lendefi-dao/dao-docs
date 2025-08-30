@@ -1,4 +1,5 @@
 # Tokenomics Overview: Lendefi DAO ($LEND)
+## Tokenomics Overview: Lendefi DAO ($LEND)
 
 After analyzing the contract implementations in detail, I can provide a more comprehensive tokenomics breakdown:
 
@@ -44,7 +45,7 @@ The Treasury contract implements a sophisticated vesting mechanism:
 
 ## Total Supply & Mechanics
 
-- **Total Supply**: 50,000,000 $LEND
+- **Total Supply**: 50,000,000 $LEND per Chain
 - **Initial Circulating**: ~5.2M tokens (Deployer + initial Treasury release)
 - **Full Circulation**: Achieved after complete vesting (3 years)
 - **Deflationary**: Supports token burning through Ecosystem contract
