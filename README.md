@@ -110,7 +110,7 @@ foundryup
 then
 
 ```
-git clone https://github.com/nebula-labs-xyz/lendefi-dao.git
+git clone https://github.com/lendefi-dao/lendefi-dao.git
 cd lendefi-dao
 
 npm install
